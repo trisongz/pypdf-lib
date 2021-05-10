@@ -73,6 +73,9 @@ class PyPDF:
         logger.info(f'Extracting {len(filenames)} Files')
         logger.debug(f'{filenames}')
         for fname in filenames:
+            if 'gs://' in fname:
+                tmpdir = File.join(output_dir, 'input_files')
+                fname = File.bcopy(fname, tmpdir, overwrite=False)
             logger.info(f'Extracting {fname}')
             if remap_dict:
                 output_file = remap_dict.get(fname, None)
