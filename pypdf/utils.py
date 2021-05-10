@@ -3,7 +3,7 @@ import os
 import sys
 import subprocess
 
-from pypdf import logger, lib_paths
+from pypdf import logger, lib_paths, File
 
 _jdk_path = os.environ.get('JAVA_HOME', None)
 _module_exist = File.exists(lib_paths['jar'])
