@@ -11,9 +11,9 @@ def _configure_logger():
         if _logger_handler:
             return
         _logger_handler = logging.getLogger(__name__)
-        _logger_handler.setLevel(logging.DEBUG)
+        _logger_handler.setLevel(logging.INFO)
         console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setLevel(logging.DEBUG)
+        console_handler.setLevel(logging.INFO)
         _logger_handler.addHandler(console_handler)
         _logger_handler.propagate = False
 
