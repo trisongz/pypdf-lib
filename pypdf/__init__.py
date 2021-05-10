@@ -34,6 +34,7 @@ class PyPDF:
         self.overwrite = overwrite
         self.input_dir = input_dir
         self.output_dir = output_dir
+        run_checks()
     
     def update_paths(self, input_dir=None, output_dir=None):
         if input_dir:
