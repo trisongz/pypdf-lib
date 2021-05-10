@@ -69,7 +69,7 @@ def run_checks():
     global _jdk_path, _module_exist
     if not _module_exist:
         logger.debug(f'Getting Module')
-        File.download(_module_paths['jar'], dirpath=lib_paths['bin'], filename='pdfact.jar')
+        File.absdownload(_module_paths['jar'], filepath=lib_paths['jar'])
         _module_exist = True
 
     if not _jdk_path:
