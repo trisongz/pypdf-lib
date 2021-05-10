@@ -56,7 +56,7 @@ class PyPDF:
         if params:
             _params.update(params)
         if _params['visualize'] and isinstance(_params['visualize'], bool):
-            _params['visualize'] = self.get_vis_path(self.get_dir(output_file), input_file)
+            _params['visualize'] = self.get_vis_path(self.get_dir(output_file), output_file)
         if not overwrite and File.exists(output_file):
             logger.error(f'Overwrite = {overwrite} and File Exists = {output_file}')
             return output_file
@@ -98,13 +98,15 @@ class PyPDF:
         output_fn = File.base(input_file).split('.')[0] + '.' + self.params['format']
         return File.join(output_dir, output_fn)
     
-    def get_vis_path(self, output_dir, input_file):
-        output_fn = File.base(input_file).split('.')[0] + '_visual.pdf'
+    def get_vis_path(self, output_dir, output_file):
+        output_fn = File.base(output_file).split('.')[0] + '_visual.pdf'
         return File.join(output_dir, output_fn)
     
     @classmethod
     def get_dir(cls, filepath):
-        return os.path.abspath(os.path.dirname(filepath))
+        dir_path = os.path.abspath(os.path.dirname(filepath))
+        File.mkdirs(dir_path)
+        return dir_path
 
     def gather_files(self, input_dir):
         if not input_dir.endswith('.pdf'):
