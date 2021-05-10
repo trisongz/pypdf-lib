@@ -76,7 +76,7 @@ def run_checks():
         _check_jdk = exec_command('which java')
         if _check_jdk and 'java' in _check_jdk:
             logger.debug(f'Setting JAVA_HOME to {_check_jdk}')
-            os.environ['JAVA_HOME'] = _jdk_path
+            os.environ['JAVA_HOME'] = _check_jdk
             _jdk_path = _check_jdk
         else:
             logger.warn(f'Java was not found in Environment Variables. This may cause problems.')
