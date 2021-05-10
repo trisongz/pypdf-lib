@@ -57,7 +57,7 @@ class PyPDF:
         if _params['visualize'] and isinstance(_params['visualize'], bool):
             _params['visualize'] = self.get_vis_path(self.get_dir(output_file), input_file)
         if not overwrite and File.exists(output_file):
-            logger.error(f'Overwrite = {} and File Exists = {output_file}')
+            logger.error(f'Overwrite = {overwrite} and File Exists = {output_file}')
             return output_file
         res = call_module(input_file=input_file, output_file=output_file, **_params)
         if not output_file:
