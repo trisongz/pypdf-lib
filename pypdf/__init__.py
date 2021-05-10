@@ -35,6 +35,7 @@ class PyPDF:
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.extracted = {}
+        self.idx = 0
         run_checks()
     
     def update_paths(self, input_dir=None, output_dir=None):
@@ -53,18 +54,22 @@ class PyPDF:
 
     def extract_pdf(self, input_file, output_file, overwrite=None, params=None):
         overwrite = overwrite if overwrite is not None else self.overwrite
+        output_files = {'input': input_file}
         _params = self.params.copy()
         if params:
             _params.update(params)
         if _params['visualize'] and isinstance(_params['visualize'], bool):
             _params['visualize'] = self.get_vis_path(self.get_dir(output_file), output_file)
+            output_files['visualize'] = _params['visualize']
         if not overwrite and File.exists(output_file):
             logger.error(f'Overwrite = {overwrite} and File Exists = {output_file}')
-            return output_file
+            output_files['output'] = output_file
+            return output_files
         res = call_module(input_file=input_file, output_file=output_file, **_params)
         if not output_file:
             return res
-        return output_file
+        output_files['output'] = output_file
+        return output_files
 
     def extract_dir(self, input_dir=None, output_dir=None, overwrite=None, remap_dict=None, remap_funct=None):
         input_dir = input_dir or self.input_dir
@@ -89,7 +94,8 @@ class PyPDF:
                 output_file = self.get_filepath(output_dir, fname) if output_dir else None
             res = self.extract_pdf(fname, output_file, overwrite)
             yield res
-            self.extracted[fname] = res
+            self.extracted[self.idx] = res
+            self.idx += 1
         logger.info(f'Completed Extraction')
         self.extracted['params'] = self.params
         return self.extracted
