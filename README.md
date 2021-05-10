@@ -23,5 +23,54 @@ brew install java
 
 ```python
 !pip install --upgrade git+https://github.com/trisongz/pypdf-lib.git
+!pip install --upgrade pypdf-lib
 
+```
+
+## Usage
+
+```python
+from pypdf import PyPDF
+from fileio import File
+
+base_dir = '/content/output'
+File.mkdirs(base_dir)
+
+# Using a remap function expects the file extension to be mapped properly - i.e. if 'txt' is selected, .txt file extension should be returned.
+
+def remap_fnames(fname):
+    fname = File.base(fname).replace('- ', '').replace(' ', '_').strip().replace('.pdf', '.json')
+    return File.join(base_dir, fname)
+
+converter = PyPDF(input_dir='/content/inputs', output_dir='/content/output', units=['paragraphs', 'blocks'], visualize=True)
+
+# remap_funct is optional. 
+for res in converter.extract(remap_funct=remap_fnames):
+    print(res)
+    # > /content/output/your_json_file_1.json
+
+converter.extracted
+'''
+{'/content/inputs/input_1.pdf': '/content/output/your_json_file_1.json',
+ '/content/inputs/input_2.pdf': '/content/output/your_json_file_2.json',
+ '/content/inputs/input_3.pdf': '/content/output/your_json_file_3.json',
+ 'params': {'exclude_roles': None,
+  'format': 'json',
+  'include_roles': ['title',
+   'body',
+   'appendix',
+   'keywords',
+   'heading',
+   'general_terms',
+   'toc',
+   'caption',
+   'table',
+   'other',
+   'categories',
+   'keywords',
+   'page_header'],
+  'units': ['paragraphs', 'blocks'],
+  'visualize': True,
+  'with_control_characters': False}}
+'''
 ```
