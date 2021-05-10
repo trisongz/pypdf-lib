@@ -54,9 +54,9 @@ def call_module(input_file, output_file=None, **kwargs):
         if isinstance(v, bool):
             call_args.append(f'--{k}')
         else:
-            v = v.replace('_', '-')
             if isinstance(v, list):
                 v = ','.join(v)
+            v = v.replace('_', '-')
             call_args.extend([f'--{k}', v])
     call_args.append(input_file)
     if output_file:
