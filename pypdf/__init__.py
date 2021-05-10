@@ -34,6 +34,7 @@ class PyPDF:
         self.overwrite = overwrite
         self.input_dir = input_dir
         self.output_dir = output_dir
+        self.extracted = {}
         run_checks()
     
     def update_paths(self, input_dir=None, output_dir=None):
@@ -71,7 +72,6 @@ class PyPDF:
         filenames = self.gather_files(input_dir)
         logger.info(f'Extracting {len(filenames)} Files')
         logger.debug(f'{filenames}')
-        extracted = {}
         for fname in filenames:
             logger.info(f'Extracting {fname}')
             if remap_dict:
@@ -86,10 +86,10 @@ class PyPDF:
                 output_file = self.get_filepath(output_dir, fname) if output_dir else None
             res = self.extract_pdf(fname, output_file, overwrite)
             yield res
-            extracted[fname] = res
+            self.extracted[fname] = res
         logger.info(f'Completed Extraction')
-        extracted['params'] = self.params
-        return extracted
+        self.extracted['params'] = self.params
+        return self.extracted
     
     def extract(self, input_dir=None, output_dir=None, overwrite=None, remap_dict=None, remap_funct=None):
         return self.extract_dir(input_dir=input_dir, output_dir=output_dir, overwrite=overwrite, remap_dict=remap_dict, remap_funct=remap_funct)
