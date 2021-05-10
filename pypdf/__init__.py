@@ -65,7 +65,7 @@ class PyPDF:
             return res
         return output_file
 
-    def extract_dir(self, input_dir=None, output_dir=None, overwrite=None):
+    def extract_dir(self, input_dir=None, output_dir=None, overwrite=None, remap_dict=None, remap_funct=None):
         input_dir = input_dir or self.input_dir
         output_dir = output_dir or self.output_dir
         filenames = self.gather_files(input_dir)
@@ -74,13 +74,25 @@ class PyPDF:
         extracted = {}
         for fname in filenames:
             logger.info(f'Extracting {fname}')
-            output_file = self.get_filepath(output_dir, fname) if output_dir else None
+            if remap_dict:
+                output_file = remap_dict.get(fname, None)
+                if not output_file:
+                    output_file = remap_dict.get(File.base(fname), None)
+                assert output_file
+            elif remap_funct:
+                output_file = remap_funct(fname)
+                assert output_file
+            else:
+                output_file = self.get_filepath(output_dir, fname) if output_dir else None
             res = self.extract_pdf(fname, output_file, overwrite)
             yield res
             extracted[fname] = res
         logger.info(f'Completed Extraction')
         extracted['params'] = self.params
         return extracted
+    
+    def extract(self, input_dir=None, output_dir=None, overwrite=None, remap_dict=None, remap_funct=None):
+        return self.extract_dir(input_dir=input_dir, output_dir=output_dir, overwrite=overwrite, remap_dict=remap_dict, remap_funct=remap_funct)
     
     def get_filepath(self, output_dir, input_file):
         output_fn = File.base(input_file).split('.')[0] + '.' + self.params['format']

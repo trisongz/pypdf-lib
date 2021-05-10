@@ -51,7 +51,7 @@ def call_module(input_file, output_file=None, **kwargs):
         if v is None:
             continue
         k = k.replace('_', '-')
-        if isinstance(v, bool):
+        if isinstance(v, bool) and v:
             call_args.append(f'--{k}')
         else:
             if isinstance(v, list):
