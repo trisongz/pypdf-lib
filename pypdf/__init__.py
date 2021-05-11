@@ -103,6 +103,31 @@ class PyPDF:
     def extract(self, input_dir=None, output_dir=None, overwrite=None, remap_dict=None, remap_funct=None):
         return self.extract_dir(input_dir=input_dir, output_dir=output_dir, overwrite=overwrite, remap_dict=remap_dict, remap_funct=remap_funct)
     
+    def extract_mapped(self, file_map, overwrite=None, tmpdir='/content/tmp'):
+        assert isinstance(file_map, dict)
+        logger.info(f'Extracting {len(file_map)} Files')
+        logger.debug(f'{file_map}')
+        for fname, output_file in file_map.items():
+            gs_file = None
+            if 'gs://' in fname:
+                fname = File.bcopy(fname, tmpdir, overwrite=False)
+            if 'gs://' in output_file:
+                gs_file = output_file
+                output_file = File.join(tmpdir, File.base(output_file))
+            logger.info(f'Extracting {fname}')
+            res = self.extract_pdf(fname, output_file, overwrite)
+            if gs_file:
+                File.copy(output_file, gs_file, overwrite)
+                res['gs_output'] = gs_file
+                if res.get('visualize', None):
+                    res['gs_visualize'] = File.bcopy(res['visualize'], File.getdir(gs_file), overwrite)
+            yield res
+            self.extracted[self.idx] = res
+            self.idx += 1
+        logger.info(f'Completed Extraction')
+        self.extracted['params'] = self.params
+        return self.extracted
+
     def get_filepath(self, output_dir, input_file):
         output_fn = File.base(input_file).split('.')[0] + '.' + self.params['format']
         return File.join(output_dir, output_fn)
