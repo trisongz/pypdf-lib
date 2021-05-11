@@ -108,6 +108,9 @@ class PyPDF:
         logger.info(f'Extracting {len(file_map)} Files')
         logger.debug(f'{file_map}')
         for fname, output_file in file_map.items():
+            if not overwrite and File.exists(output_file):
+                logger.info(f'Skipping {fname} as {output_file} exists.')
+                continue
             gs_file = None
             if 'gs://' in fname:
                 fname = File.bcopy(fname, tmpdir, overwrite=False)
@@ -124,7 +127,6 @@ class PyPDF:
                 if res.get('visualize', None):
                     res['gs_visualize'] = File.join(File.getdir(gs_file), File.base(res['visualize']))
                     File.copy(res['visualize'], res['gs_visualize'], overwrite)
-                    #res['gs_visualize'] = File.bcopy(res['visualize'], File.getdir(gs_file), overwrite)
             yield res
             self.extracted[self.idx] = res
             self.idx += 1
