@@ -114,9 +114,9 @@ class PyPDF:
             if 'gs://' in output_file:
                 gs_file = output_file
                 output_file = File.join(tmpdir, File.base(output_file))
-                logger.info(f'Extracting {fname} -> {output_file} -> {gs_file}')
+                logger.info(f'Extracting: {fname} -> {output_file} -> {gs_file}')
             else:
-                logger.info(f'Extracting {fname} -> {output_file}')
+                logger.info(f'Extracting: {fname} -> {output_file}')
             res = self.extract_pdf(fname, output_file, overwrite)
             if gs_file:
                 File.copy(output_file, gs_file, overwrite)
