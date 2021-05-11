@@ -122,7 +122,9 @@ class PyPDF:
                 File.copy(output_file, gs_file, overwrite)
                 res['gs_output'] = gs_file
                 if res.get('visualize', None):
-                    res['gs_visualize'] = File.bcopy(res['visualize'], File.getdir(gs_file), overwrite)
+                    res['gs_visualize'] = File.join(File.getdir(gs_file), File.base(res['visualize']))
+                    File.copy(res['visualize'], res['gs_visualize'], overwrite)
+                    #res['gs_visualize'] = File.bcopy(res['visualize'], File.getdir(gs_file), overwrite)
             yield res
             self.extracted[self.idx] = res
             self.idx += 1
