@@ -121,6 +121,9 @@ class PyPDF:
             else:
                 logger.info(f'Extracting: {fname} -> {output_file}')
             res = self.extract_pdf(fname, output_file, overwrite)
+            if not File.exists(output_file):
+                logger.warning(f'Error in Extracting: {fname} -> {output_file}. File was not created')
+                continue
             if gs_file:
                 File.copy(output_file, gs_file, overwrite)
                 res['gs_output'] = gs_file
