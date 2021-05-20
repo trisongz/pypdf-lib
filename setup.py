@@ -2,7 +2,7 @@ import os
 import sys
 from setuptools import setup, find_packages
 
-version = '0.0.1'
+version = '0.0.2'
 binary_names = ['pypdf']
 pkg_name = 'pypdf'
 repo_name = 'pypdf-lib'
@@ -32,7 +32,7 @@ setup(
     author='Tri Songz',
     author_email='ts@growthengineai.com',
     url=f'http://github.com/trisongz/{repo_name}',
-    python_requires='>3.6',
+    python_requires='>=3.6',
     install_requires=deps['main'],
     packages=packages,
     classifiers=[
