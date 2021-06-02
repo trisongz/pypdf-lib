@@ -65,6 +65,10 @@ def call_module(input_file, output_file=None, **kwargs):
     logger.debug(f'Call Args: {call_args}')
     return subprocess.call(call_args)
 
+def call_help():
+    #call_args = ['java', '-jar', lib_paths['jar'], '--help']
+    cmd = f'java -jar {lib_paths["jar"]} --help'
+    return exec_command(cmd)
 
 def run_checks():
     global _jdk_path, _module_exist
